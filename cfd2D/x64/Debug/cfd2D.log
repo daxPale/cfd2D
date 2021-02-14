@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\16070001006\Projects\cfd2D\cfd2D\src\main.cpp(11,28): warning C4305: 'argument': truncation from 'double' to 'float'
+  cfd2D.vcxproj -> C:\Users\16070001006\Projects\cfd2D\x64\Debug\cfd2D.exe
