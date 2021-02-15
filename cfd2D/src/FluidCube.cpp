@@ -1,21 +1,21 @@
 #include "FluidCube.h"
 
-FluidCube::FluidCube(int a_size, float a_dt, int a_diffusion, int a_viscosity)
+FluidCube::FluidCube(float a_dt, int a_diffusion, int a_viscosity)
 {
-	size = a_size;
+	size = N;
 
 	dt = a_dt;
 	diff = a_diffusion;
 	visc = a_viscosity;
 
-	s = new float(size * size);
-	density = new float(size * size);
+	s = (float*) calloc(N * N * N, sizeof(float));
+	density = (float*) calloc(N * N * N, sizeof(float));
 
-	Vx = new float(size * size);
-	Vy = new float(size * size);
+	Vx = (float*) calloc(N * N * N, sizeof(float));
+	Vy = (float*) calloc(N * N * N, sizeof(float));
 
-	Vx0 = new float(size * size);
-	Vy0 = new float(size * size);
+	Vx0 = (float*) calloc(N * N * N, sizeof(float));
+	Vy0 = (float*) calloc(N * N * N, sizeof(float));
 }
 	 
 FluidCube::~FluidCube() {
@@ -32,8 +32,6 @@ void FluidCube::freeCube(FluidCube *cube)
 
 	delete(cube->Vx0);
 	delete(cube->Vy0);
-
-	delete(cube);
 }
 
 void FluidCube::addDensity(int x, int y, float amount) {
@@ -48,7 +46,21 @@ void FluidCube::addVelocity(int x, int y, float amountX, float amountY) {
 	Vx[index] += amountX;
 	Vy[index] += amountY;
 }
+void FluidCube::step()
+{
+	float _visc = visc;
+	float _diff = diff;
+	float _dt = dt;
 
-int FluidCube::locIndex(int x, int y) {
-	return x + y * size;
+	float* _Vx = Vx;
+	float* _Vy = Vy;
+
+	float* _Vx0 = Vx0;
+	float* _Vy0 = Vy0;
+
+	float* _s = s;
+	float* _density = density;
+
+	diffuse(1, _Vx0, _Vx, _visc, _dt, 4);
+	diffuse(2, _Vy0, _Vy, _visc, _dt, 4);
 }

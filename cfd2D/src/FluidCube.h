@@ -1,8 +1,10 @@
 #pragma once
+#include "Functions.h"
+#include <iostream>
 
 class FluidCube {
 public:
-	FluidCube(int a_size, float a_dt, int a_diffusion, int a_viscosity);
+	FluidCube(float a_dt, int a_diffusion, int a_viscosity);
 	~FluidCube();
 
 	int size;
@@ -22,7 +24,7 @@ public:
 	void freeCube(FluidCube *cube);
 	void addDensity(int x, int y, float amount);
 	void addVelocity(int x, int y, float amountX, float amountY);
+	void step();
 
 private:
-	int locIndex(int x, int y);
 };
