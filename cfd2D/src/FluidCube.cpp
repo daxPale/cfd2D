@@ -8,14 +8,14 @@ FluidCube::FluidCube(float a_dt, int a_diffusion, int a_viscosity)
 	diff = a_diffusion;
 	visc = a_viscosity;
 
-	s = (float*) calloc(N * N * N, sizeof(float));
-	density = (float*) calloc(N * N * N, sizeof(float));
+	s = (float*) calloc(N  * N, sizeof(float));
+	density = (float*) calloc(N * N, sizeof(float));
 
-	Vx = (float*) calloc(N * N * N, sizeof(float));
-	Vy = (float*) calloc(N * N * N, sizeof(float));
+	Vx = (float*) calloc(N * N, sizeof(float));
+	Vy = (float*) calloc(N * N, sizeof(float));
 
-	Vx0 = (float*) calloc(N * N * N, sizeof(float));
-	Vy0 = (float*) calloc(N * N * N, sizeof(float));
+	Vx0 = (float*) calloc(N * N, sizeof(float));
+	Vy0 = (float*) calloc(N * N, sizeof(float));
 }
 	 
 FluidCube::~FluidCube() {
@@ -46,6 +46,7 @@ void FluidCube::addVelocity(int x, int y, float amountX, float amountY) {
 	Vx[index] += amountX;
 	Vy[index] += amountY;
 }
+
 void FluidCube::step()
 {
 	float _visc = visc;
@@ -63,4 +64,14 @@ void FluidCube::step()
 
 	diffuse(1, _Vx0, _Vx, _visc, _dt, 4);
 	diffuse(2, _Vy0, _Vy, _visc, _dt, 4);
+
+	project(Vx0, Vy0, Vx, Vy, 4);
+
+	advect(1, Vx, Vx0, Vx0, Vy0, dt);
+	advect(2, Vy, Vy0, Vx0, Vy0, dt);
+
+	project(Vx, Vy, Vx0, Vy0, 4);
+
+	diffuse(0, s, density, diff, dt, 4);
+	advect(0, density, s, Vx, Vy, dt);
 }
